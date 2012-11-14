@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+
+# Intialize DEMOBOT
+
+# steps that happen before this
+# invite to external network
+# do we make it an admin
+# 
+
+
+# Realtime API component
+# Use Realtime API to make a que of new content that is pushed to DEMOBOT
+ =begin
+define a method to process que
+if the message contains a reference (at mention ; topic that matches something)
+do 
+	ReplyMethod
+else 
+	wait for more
+
+ =end
+ 
+# 
+=begin
+replymethod
+looks at message and determines what kind of message it is
+	polls, message, PM, etc
+hands off to methods for each of these
+=end
