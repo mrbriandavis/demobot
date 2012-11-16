@@ -1,0 +1,14 @@
+0. Get Xcode and install the command line tools. It's in the appstore.
+1. Install homebrew
+ - Check that you can run gcc at the command line.
+ - Get it from github
+ - Run brew doctor and fix any probs
+2. Install RabbitMQ (never do sudo brew, ever)
+ - brew install rabbitmq
+3. Install the python deps (requires sudo)
+ - Install pip. Do: sudo easy_install pip
+ - Use pip to install the other stuff:
+    sudo pip install django
+    sudo pip install celery
+    sudo pip install django-celery
+    sudo pip install tastypie
