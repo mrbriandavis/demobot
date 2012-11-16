@@ -1,6 +1,88 @@
 from django.db import models
-from django.db.models import signals
-from django.dispatch import dispatcher
+
+class Script(models.Model):
+    name = models.CharField(max_length=15, unique=True)
+    description = models.CharField(max_length=50)
+
+    def __unicode__(self):
+        return self.name
+
+
+class Thread(models.Model):
+    script = models.ForeignKey(Script)
+    name = models.CharField(max_length=15, unique=True)
+    description = models.CharField(max_length=50)
+    group_id = models.IntegerField()
+
+    def __unicode__(self):
+        return self.name
+
+
+class Post(models.Model):
+    thread = models.ForeignKey(Thread)
+    is_starter = models.BooleanField()
+    name = models.CharField(max_length=15, unique=True)
+    content = models.CharField(max_length=9000)
+    metadata = models.CharField(max_length=9000)
+    token = models.CharField(max_length=50)
+    delay = models.IntegerField()
+
+    def __unicode__(self):
+        return '%s (%s / %s)' % (self.name, self.thread.name, self.thread.script.name)
+
+
+#    * Message content
+#    * OG metadata
+#    * Group ID, if not main feed.
+#    * OAuth token for user
+#    * Delay in seconds (optional - posts are always delayed a bit to avoid rate limits)
+
+class Event(models.Model):
+    """An incoming event that we need to start processing"""
+    name = models.CharField(max_length=20)
+
+def event_post_save(sender, instance, signal, *args, **kwargs):
+    """Starts a Task when an Event is created"""
+    from hackday.tasks import add, start
+    from celery import group
+#
+#
+#    print 'dfdf ' + instance.name
+#    print
+#    print
+#
+#    t_name = 'pf-thread01'
+#    posts = Post.objects.filter(thread__name=t_name).all()
+#
+#    for p in posts:
+##        print dir(t)
+#        print p.thread.name
+#        print p.name
+
+
+#    c = len(threads.objects)
+#    c = posts.count()
+#    info = 'Object count: %s' % (c)
+
+    print 'Received "%s" for processing' % (instance.name)
+
+    start.delay(instance.name)
+
+# Wire up the post_save handler for Events
+models.signals.post_save.connect(event_post_save, sender=Event)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -21,26 +103,6 @@ class Line(models.Model):
     # delay = 10
     # in_reply_to = "" # optional
 
-class Event(models.Model):
-    name = models.CharField(max_length=20)
-
-
-def event_post_save(sender, instance, signal, *args, **kwargs):
-    # Creates user profile
-    from hackday.tasks import add
-    from celery import group
-
-    jobs = []
-
-    for x in range(1,10):
-        st = add.subtask((1, x))
-        jobs.append(st)
-
-    job = group(jobs)
-    result = job.apply_async()
-    res = result.join()
-
-models.signals.post_save.connect(event_post_save, sender=Event)
 
 class Poll(models.Model):
     question = models.CharField(max_length=200)
