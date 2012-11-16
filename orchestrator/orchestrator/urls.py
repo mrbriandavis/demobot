@@ -1,11 +1,17 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
+from tastypie.api import Api
 admin.autodiscover()
 
 #from django.conf.urls.defaults import *
-from hackday.api import EventResource
+from hackday.api import EventResource, PostResource
 
 event_resource = EventResource()
+post_resource = PostResource()
+
+v1_api = Api(api_name='v1')
+v1_api.register(EventResource())
+v1_api.register(PostResource())
 
 urlpatterns = patterns('',
     # Examples:
@@ -20,7 +26,7 @@ urlpatterns = patterns('',
     url(r'^hackday/(?P<poll_id>\d+)/results/$', 'hackday.views.results'),
     url(r'^hackday/(?P<poll_id>\d+)/vote/$', 'hackday.views.vote'),
 #    url(r'^api/event/$', 'hackday.views.event'),
-    (r'^api/', include(event_resource.urls)),
+    (r'^api/', include(v1_api.urls)),
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
