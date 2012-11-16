@@ -1,0 +1,19 @@
+Creating a thread which is made up of posts
+
+    Thread starter data (1 item
+
+    * Message content
+    * OG metadata
+    * Group ID, if not main feed.
+    * OAuth token for user
+    * Delay in seconds (optional - posts are always delayed a bit to avoid rate limits)
+
+    Replies (0-5 items)
+
+    * Message ID from the TS.
+    * Message content for reply
+    * OAuth token for the user
+    * Delay in seconds
+
+
+Threads are part of a script
